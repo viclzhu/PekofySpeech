@@ -8,13 +8,19 @@ Note: While the sound clip is playing, your mic audio is ignored so you generall
 # Requirements
 1. You need a 'virtual cable' program installed to route your computer output audio.
     - You can use VB-Cable, Blackhole, Loopback, etc.
+2. You also need Python3 installed along with the required libraries.
 
 # Installation
 Clone this repo to the directory of your choice.
 1. Open terminal and navigate to your chosen directory.
 - Run `cd PATH/TO/REPO`.
 2. Clone the repository.
-- Run `git clone https://github.com/viclzhu/PekofySpeech.git`.
+- Run `git clone https://github.com/viclzhu/PekofySpeech.git`.  
+
+Install the required python libraries.
+1. Run `pip install numpy`.
+2. Run `pip install wave`.
+1. Run `pip install pyaudio`.
 
 # How To Use
 1. Enter the `PekofySpeech` directory.
