@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[9]:
+# In[ ]:
 
 
 """
@@ -10,7 +10,7 @@ Currently only supports .wav files.
 """
 
 
-# In[9]:
+# In[ ]:
 
 
 from sys import byteorder
@@ -20,12 +20,11 @@ from struct import pack
 import pyaudio
 import wave
 import numpy
-import random
 
 import argparse
 
 
-# In[10]:
+# In[ ]:
 
 
 FORMAT = pyaudio.paInt16
@@ -34,7 +33,7 @@ RATE = 44100
 CHUNK = 1024
 
 
-# In[11]:
+# In[ ]:
 
 
 def args_parse():
@@ -42,15 +41,24 @@ def args_parse():
     parser = argparse.ArgumentParser(description='Pekofy arguments.')
     parser.add_argument('--clip', type=str,
                         help='Wav sound clip path.')
+    parser.add_argument('--threshold', type=int,
+                        help='Sound volume threshold to count as talking.')
+    parser.add_argument('--delay', type=int,
+                        help='Delay before peko is played after speech.')
+    parser.add_argument('--talk_duration', type=int,
+                        help='How long you need to talk for peko to be played.')
 
-    parser.set_defaults(clip="./soundboard/peko.wav")
+    parser.set_defaults(clip="./soundboard/peko.wav",
+                        threshold = 750,
+                        delay = 10,
+                        talk_duration = 20)
     return parser.parse_args()
 
-def check_threshold(data, THRESHOLD = 750):
-    # Checks if the data is below the threshold
+def check_threshold(data, THRESHOLD):
+    # Checks if the sound volume is below the threshold
     return max(data) <= THRESHOLD
 
-def pekoify(wav_file, PEKO_DELAY = 10, TALK_DURATION = 20):
+def pekoify(wav_file, PEKO_DELAY, TALK_DURATION, THRESHOLD):
     
     p = pyaudio.PyAudio()
     
@@ -78,7 +86,7 @@ def pekoify(wav_file, PEKO_DELAY = 10, TALK_DURATION = 20):
             # If big endian, swap bytes to little endian
             data_array.byteswap()
 
-        silent = check_threshold(data_array)
+        silent = check_threshold(data_array, THRESHOLD)
 
         if silent and talking_started:
             # Increment silent counter when talking has started and is silent
@@ -131,13 +139,13 @@ def pekoify(wav_file, PEKO_DELAY = 10, TALK_DURATION = 20):
     p.terminate()
 
 
-# In[12]:
+# In[ ]:
 
 
 if __name__ == '__main__':
     args = args_parse()
     print("Pekofying Initiated")
-    pekoify(args.clip)
+    pekoify(args.clip, args.delay, args.talk_duration, args.threshold)
     print("Pekofying Completed")
 
 
